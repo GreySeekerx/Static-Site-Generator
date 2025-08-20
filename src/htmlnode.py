@@ -1,4 +1,4 @@
-
+from textnode import TextType
 # tag - string, tag HTML name
 # value - string, value of HTML
 # children - list of HTMLNode objects representing the children
@@ -46,20 +46,37 @@ class LeafNode(HTMLNode):
     
 class ParentNode(HTMLNode):
     def __init__(self, tag, children, props=None):
-        if tag is None:
-            raise ValueError("Error")
-        if children is None:
-            raise ValueError("Error")
-
         super().__init__(tag, None, children, props)
         
     def to_html(self):
         if self.tag is None:
             raise ValueError("No tag")
-        if self.children is None or len(self.children) == 0:
+        if self.children is None:
             raise ValueError("No value in the child")
         
         html_children = ""
         for child in self.children:
             html_children += child.to_html()
         return f"<{self.tag}{self.props_to_html()}>{html_children}</{self.tag}>"
+    
+    def __repr__(self):
+        return f"ParentNode({self.tag}, children: {self.children}, {self.props})"
+    
+def text_node_to_html_node(text_node):
+    if text_node.text_type == TextType.TEXT:
+        return LeafNode(None, text_node.text)
+    elif text_node.text_type == TextType.BOLD:
+        return LeafNode("b", text_node.text)
+    elif text_node.text_type == TextType.ITALIC:
+        return LeafNode("i", text_node.text)
+    elif text_node.text_type == TextType.CODE:
+        return LeafNode("code", text_node.text)
+    elif text_node.text_type == TextType.LINK:
+        return LeafNode("a", text_node.text, {"href": text_node.url})
+    elif text_node.text_type == TextType.IMAGE:
+        return LeafNode("img", "", {"src": text_node.url, "alt": text_node.text})
+    
+    else:
+        raise Exception("errror")
+    
+    

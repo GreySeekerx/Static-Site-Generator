@@ -1,6 +1,7 @@
 import unittest
 
-from htmlnode import HTMLNode, LeafNode, ParentNode
+from htmlnode import HTMLNode, LeafNode, ParentNode, text_node_to_html_node
+from textnode import TextType, TextNode
 
 class TestHTMLNode(unittest.TestCase):
     def test_to_html_props(self):
@@ -86,7 +87,7 @@ class TestParentNode(unittest.TestCase):
 
             ],
         )
-        self.assertEqual(node.to_html(), "<p><b>Bold text</b>Normal text<i>italic text</i>Normal text</p>",)
+        self.assertEqual(node.to_html(), "<p><b>Bold text</b>Normal text<i>italic text</i>normal text</p>",)
         
     def test_headings(self):
         node = ParentNode(
@@ -98,8 +99,21 @@ class TestParentNode(unittest.TestCase):
                 LeafNode(None, "normal text"),
             ],
         )
-        self.assertEqual(node.to_html(), "<h2><b>Bold text</>Normal text<i>italic text</i>Normal text</h2>",
+        self.assertEqual(node.to_html(), "<h2><b>Bold text</b>Normal text<i>italic text</i>normal text</h2>",
         )
                 
+class TestTextNode(unittest.TestCase):
+    def test_text(self):
+        node = TextNode("This is a text node", TextType.TEXT)
+        html_node = text_node_to_html_node(node)
+        self.assertEqual(html_node.tag, None)
+        self.assertEqual(html_node.value, "This is a text node")
+        
+    def test_bold(self):
+        node = TextNode("this is a text node", TextType.BOLD)
+        html_node = text_node_to_html_node(node)
+        self.assertEqual(html_node.tag, "b")
+        self.assertEqual(html_node.value, "this is a text node")
+
 if __name__ == "__main__":
     unittest.main()
