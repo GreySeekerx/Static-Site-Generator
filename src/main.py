@@ -5,13 +5,7 @@ from textnode import TextNode, TextType
 
     
 def copy_content(source, destination):
-    
-
-
     static_path = os.listdir(source)
-
-
-
     for i in static_path:
         sub_path = os.path.join(source, i)
         sub_path1 = os.path.join(destination, i)
