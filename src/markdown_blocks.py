@@ -137,7 +137,4 @@ def quote_to_html_node(block):
     children = text_to_children(content)
     return ParentNode("blockquote", children)
     
-                 #ddd
-                 #fff
-                 #hghj
-                 #ekfdm
+                
