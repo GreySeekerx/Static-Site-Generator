@@ -1,4 +1,5 @@
-
+import os
+from markdown_blocks import markdown_to_html_node
 
 def extract_title(markdown):
     header = False
@@ -16,3 +17,22 @@ def generator_page(from_path, template_path, dest_path):
     
     with open(template_path) as f:
         html_text = f.read()
+        
+    
+    processed_markdown = markdown_text.splitlines()
+    title = extract_title(processed_markdown)
+    html_node = markdown_to_html_node(markdown_text)
+    final_html = html_node.to_html()
+
+    page_html = html_text.replace("{{ Title }}", title)
+    page_html = page_html.replace("{{ Content }}", final_html)
+
+    dest_dir_path = os.path.dirname(dest_path)
+    if dest_dir_path != "":
+        os.makedirs(dest_dir_path, exist_ok=True)
+
+    
+    with open(dest_path, "w") as f:
+        f.write(page_html)
+        
+    print("Page generated")
