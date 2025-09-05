@@ -1,7 +1,13 @@
 import unittest
-from markdown_blocks import markdown_to_blocks, block_to_block_type, BlockType, markdown_to_html_node
+from markdown_blocks import (
+    markdown_to_html_node,
+    markdown_to_blocks,
+    block_to_block_type,
+    BlockType,
+)
 
-class TestMarkdowntoHTML(unittest.TestCase):
+
+class TestMarkdownToHTML(unittest.TestCase):
     def test_markdown_to_blocks(self):
         md = """
 This is **bolded** paragraph
@@ -21,10 +27,9 @@ This is the same paragraph on a new line
                 "- This is a list\n- with items",
             ],
         )
-        
-    def test_markdown_to_blocks_newlines_(self):
-        md = """
 
+    def test_markdown_to_blocks_newlines(self):
+        md = """
 This is **bolded** paragraph
 
 
@@ -36,7 +41,6 @@ This is the same paragraph on a new line
 - This is a list
 - with items
 """
-
         blocks = markdown_to_blocks(md)
         self.assertEqual(
             blocks,
@@ -46,7 +50,7 @@ This is the same paragraph on a new line
                 "- This is a list\n- with items",
             ],
         )
-    
+
     def test_block_to_block_types(self):
         block = "# heading"
         self.assertEqual(block_to_block_type(block), BlockType.HEADING)
@@ -60,7 +64,6 @@ This is the same paragraph on a new line
         self.assertEqual(block_to_block_type(block), BlockType.OLIST)
         block = "paragraph"
         self.assertEqual(block_to_block_type(block), BlockType.PARAGRAPH)
-        
 
     def test_paragraph(self):
         md = """
@@ -76,7 +79,7 @@ tag here
             html,
             "<div><p>This is <b>bolded</b> paragraph text in a p tag here</p></div>",
         )
-        
+
     def test_paragraphs(self):
         md = """
 This is **bolded** paragraph
@@ -92,9 +95,8 @@ This is another paragraph with _italic_ text and `code` here
         self.assertEqual(
             html,
             "<div><p>This is <b>bolded</b> paragraph text in a p tag here</p><p>This is another paragraph with <i>italic</i> text and <code>code</code> here</p></div>",
-            
         )
-        
+
     def test_lists(self):
         md = """
 - This is a list
@@ -113,7 +115,7 @@ This is another paragraph with _italic_ text and `code` here
             html,
             "<div><ul><li>This is a list</li><li>with items</li><li>and <i>more</i> items</li></ul><ol><li>This is an <code>ordered</code> list</li><li>with items</li><li>and more items</li></ol></div>",
         )
-        
+
     def test_headings(self):
         md = """
 # this is an h1
@@ -129,7 +131,7 @@ this is paragraph text
             html,
             "<div><h1>this is an h1</h1><p>this is paragraph text</p><h2>this is an h2</h2></div>",
         )
-    
+
     def test_blockquote(self):
         md = """
 > This is a
@@ -145,8 +147,8 @@ this is paragraph text
             html,
             "<div><blockquote>This is a blockquote block</blockquote><p>this is paragraph text</p></div>",
         )
-    
-    def test_code(self):
+
+    def test_codeblock(self):
         md = """
 ```
 This is text that _should_ remain
@@ -160,6 +162,7 @@ the **same** even with inline stuff
             html,
             "<div><pre><code>This is text that _should_ remain\nthe **same** even with inline stuff\n</code></pre></div>",
         )
-        
-if __name__== "__main__":
+
+
+if __name__ == "__main__":
     unittest.main()

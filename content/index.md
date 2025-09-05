@@ -10,8 +10,8 @@ Here's the deal, **I like Tolkien**.
 
 ## Blog posts
 
-- [Why Glorfindel is Less Impressive than Legolas](/blog/glorfindel)
-- [Why Tom Bombadil was not a Mistake](/blog/tom)
+- [Why Glorfindel is More Impressive than Legolas](/blog/glorfindel)
+- [Why Tom Bombadil Was a Mistake](/blog/tom)
 - [The Unparalleled Majesty of "The Lord of the Rings"](/blog/majesty)
 
 ## Reasons I like Tolkien
@@ -24,14 +24,14 @@ Here's the deal, **I like Tolkien**.
 ## My favorite characters (in order)
 
 1. Gandalf
-2. Gimli
-3. Sauron
-4. Legolas
+2. Bilbo
+3. Sam
+4. Glorfindel
 5. Galadriel
 6. Elrond
 7. Thorin
 8. Sauron
-9. Pipin
+9. Aragorn
 
 Here's what `elflang` looks like (the perfect coding language):
 

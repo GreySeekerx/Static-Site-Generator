@@ -1,48 +1,45 @@
-import shutil, os
-from textnode import TextNode, TextType
-from generator import generator_page
+import os
+import shutil
+
+from copystatic import copy_files_recursive
+from gencontent import generate_page
+
+dir_path_static = "./static"
+dir_path_public = "./public"
+dir_path_content = "./content"
+template_path = "./template.html"
 
 
-
-    
-def copy_content(source, destination):
-    static_path = os.listdir(source)
-    for i in static_path:
-        sub_path = os.path.join(source, i)
-        sub_path1 = os.path.join(destination, i)
-        if os.path.isfile(sub_path):
-            shutil.copy(sub_path, sub_path1) 
-            print(f"Copied file: {sub_path} to {destination}")
-        elif os.path.isdir(sub_path):
-            os.makedirs(sub_path1, exist_ok=True)
-            copy_content(sub_path, sub_path1)
-
-def generator_pages(dir_path_content, template_path, dest_path):
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
     for filename in os.listdir(dir_path_content):
         from_path = os.path.join(dir_path_content, filename)
-        dest_path_for_file = os.path.join(dest_path, filename)
+        dest_path_for_file = os.path.join(dest_dir_path, filename)
+        
         if os.path.isfile(from_path):
-            if filename.endswith(".md"):
+            if from_path.endswith(".md"):
+                dest_dir_path = os.path.dirname(dest_path_for_file)
+                if dest_dir_path != "":
+                    os.makedirs(dest_dir_path, exist_ok=True)
                 dest_path_for_file = dest_path_for_file.replace(".md", ".html")
-                generator_page(from_path, template_path, dest_path_for_file)
+                generate_page(from_path, template_path, dest_path_for_file)
+        
         elif os.path.isdir(from_path):
-            generator_pages(from_path, template_path, dest_path_for_file)  
-
+            generate_pages_recursive(from_path, template_path, dest_path_for_file)
 
 def main():
-    source = "static" 
-    destination = "public"
-    content_dir = "content"
-    template_file = "template.html"
-    if os.path.exists(destination): 
-        shutil.rmtree(destination)
-    os.makedirs(destination)    
+    print("Deleting public directory...")
+    if os.path.exists(dir_path_public):
+        shutil.rmtree(dir_path_public)
 
-    print("Copying static files")
-    copy_content(source, destination)
-    
-    print("\n Generating Markdown pages")
-    generator_pages(content_dir, template_file, destination)
+    print("Copying static files to public directory...")
+    copy_files_recursive(dir_path_static, dir_path_public)
+
+    print("Generating pages recursively...")
+    generate_pages_recursive(
+        dir_path_content,
+        template_path,
+        dir_path_public
+    )
 
 if __name__ == "__main__":
     main()
