@@ -1,45 +1,62 @@
 import os
 import shutil
-
-from copystatic import copy_files_recursive
-from gencontent import generate_page
+import sys
+from gencontent import generate_pages_recursive
 
 dir_path_static = "./static"
-dir_path_public = "./public"
+dir_path_docs = "./docs"
 dir_path_content = "./content"
 template_path = "./template.html"
 
 
-def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
-    for filename in os.listdir(dir_path_content):
-        from_path = os.path.join(dir_path_content, filename)
-        dest_path_for_file = os.path.join(dest_dir_path, filename)
-        
+def copy_files_recursive(from_dir, to_dir):
+    """
+    Recursively copies files from a source directory to a destination directory.
+
+    Args:
+        from_dir (str): The path to the source directory.
+        to_dir (str): The path to the destination directory.
+    """
+    # Create the destination directory if it doesn't exist
+    if not os.path.exists(to_dir):
+        os.mkdir(to_dir)
+
+    # Iterate over all items in the source directory
+    for item in os.listdir(from_dir):
+        from_path = os.path.join(from_dir, item)
+        to_path = os.path.join(to_dir, item)
+
+        # If the item is a file, copy it
         if os.path.isfile(from_path):
-            if from_path.endswith(".md"):
-                dest_dir_path = os.path.dirname(dest_path_for_file)
-                if dest_dir_path != "":
-                    os.makedirs(dest_dir_path, exist_ok=True)
-                dest_path_for_file = dest_path_for_file.replace(".md", ".html")
-                generate_page(from_path, template_path, dest_path_for_file)
-        
+            shutil.copy(from_path, to_path)
+        # If the item is a directory, make a recursive call
         elif os.path.isdir(from_path):
-            generate_pages_recursive(from_path, template_path, dest_path_for_file)
+            copy_files_recursive(from_path, to_path)
+
 
 def main():
-    print("Deleting public directory...")
-    if os.path.exists(dir_path_public):
-        shutil.rmtree(dir_path_public)
+    basepath = "/"
+    if len(sys.argv) > 1:
+        basepath = sys.argv[1]
 
-    print("Copying static files to public directory...")
-    copy_files_recursive(dir_path_static, dir_path_public)
+    print("Deleting docs directory...")
+    if os.path.exists(dir_path_docs):
+        shutil.rmtree(dir_path_docs)
+
+    print("Copying static files to docs directory...")
+    copy_files_recursive(dir_path_static, dir_path_docs)
 
     print("Generating pages recursively...")
+    # The import for this function is missing in the original provided file.
+    # Make sure to have `from gencontent import generate_pages_recursive` at the top of main.py
+    # or define the function in this file.
     generate_pages_recursive(
         dir_path_content,
         template_path,
-        dir_path_public
+        dir_path_docs,
+        basepath,
     )
+
 
 if __name__ == "__main__":
     main()
